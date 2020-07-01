@@ -2,6 +2,15 @@ import React from 'react';
 import './Login.css';
 
 class Login extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.changePageToRegister = this.changePageToRegister.bind(this);
+    }
+
+    changePageToRegister() {
+        this.props.changePage('register');
+    }
 
     render() {
         return(
@@ -17,7 +26,7 @@ class Login extends React.Component {
                     <input type="password" name="password" id="login-password" className="login_input"/>
                     <br />
                     <button className="login_button">Login</button>
-                    <p className="register_link">No account? Register</p>
+                    <p className="register_link" onClick={this.changePageToRegister}>No account? Register</p>
                 </div>
             </div>
         );
