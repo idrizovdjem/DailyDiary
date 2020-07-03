@@ -19,6 +19,11 @@
     text-align: center;
 }
 
+.description h3 {
+    line-height: 35px;
+    text-align: justify;
+}
+
 .login_input {
     margin-top: 30px;
     font-size: 18px;
@@ -32,4 +37,15 @@
 .login_button {
     width: 50%;
     height: 35px;
+}
+
+.register_link {
+    margin: 10px;
+    text-decoration: underline;
+    color: #4062BB;
+}
+
+.register_link:hover {
+    cursor: pointer;
+    color: #52489C;
 }

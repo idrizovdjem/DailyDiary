@@ -34,6 +34,7 @@ class Login extends React.Component {
                         <input type="password" name="password" id="loginPassword" />
                         <br />
                         <button className="login_button">Login</button>
+                        <p className="register_link">No account? register</p>
                     </div>
                 </div>
             </div>
