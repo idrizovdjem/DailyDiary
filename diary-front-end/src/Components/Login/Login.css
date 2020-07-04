@@ -40,6 +40,7 @@
 }
 
 .register_link {
+    user-select: none;
     margin: 10px;
     text-decoration: underline;
     color: #4062BB;
