@@ -1,8 +1,11 @@
 const express = require('express');
 const appRouter = express.Router();
+const { checkUsername } = require('./databaseQueries');
 
-appRouter.get('/',(req,res) => {
-    res.send("<h1>Hello</h1>");
+appRouter.post('/checkUsername', async (req,res) => {
+    const username = req.body.username;
+    const result = await checkUsername(username);
+    res.json(result);
 });
 
 module.exports = appRouter;

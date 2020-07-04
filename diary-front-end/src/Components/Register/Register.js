@@ -6,10 +6,50 @@ class Register extends React.Component {
         super(props);
 
         this.changePageToLogin = this.changePageToLogin.bind(this);
+        this.sendRegisterRequest = this.sendRegisterRequest.bind(this);
     }
 
     changePageToLogin() {
         this.props.changePage('login');
+    }
+
+    async sendRegisterRequest() {
+        const username = document.getElementById('registerUsername').value.trim();
+        const password = document.getElementById('registerPassword').value.trim();
+        const result = await this.validateCredentials(username, password);
+        if(result !== 'validation successful') {
+            alert(result);
+        }
+
+        // make register request
+    }
+
+    async validateCredentials(username, password) {
+        if(username.length < 4) {
+            return 'Username is too short. Must be at least 4 symbols';
+        }
+
+        if(password.length < 6) {
+            return 'Password is too short. Must be at least 6 symbols.';
+        }
+
+        await fetch('http://localhost:5000/checkUsername',{
+            method: 'POST',
+            headers: {
+                'Content-type':'Application/json'
+            },
+            body: JSON.stringify({
+                'username': username
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(!data.usernameUnique) {
+                return 'This username is already taken';
+            }
+        });
+
+        return 'validation successful';
     }
 
     render() {
@@ -33,7 +73,7 @@ class Register extends React.Component {
                         <p>Password:</p>
                         <input type="password" name="password" id="registerPassword" />
                         <br />
-                        <button className="register_button">Register</button>
+                        <button className="register_button" onClick={this.sendRegisterRequest}>Register</button>
                         <p className="login_link" onClick={this.changePageToLogin}>Already have account? Login</p>
                     </div>
                 </div>
