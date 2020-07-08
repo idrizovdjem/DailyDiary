@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
 
 const pool = mysql.createPool({
     "connectionLimit": 10,
@@ -22,6 +23,19 @@ function checkUsername(username) {
     });
 }
 
+function registerUser(username, password) {
+    return new Promise((resolve, reject) => {
+        const uuid = uuidv4();
+        pool.query('insert into Users(Username,`Password`,Registered_On,User_Key) values(?,?,CURDATE(),?)',
+        [username, password,uuid], (err,res) => {
+            if(err) reject(err);
+
+            resolve(uuid);
+        });
+    });
+}
+
 module.exports = {
-    checkUsername
+    checkUsername,
+    registerUser
 }

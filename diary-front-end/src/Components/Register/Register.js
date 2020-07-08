@@ -17,11 +17,27 @@ class Register extends React.Component {
         const username = document.getElementById('registerUsername').value.trim();
         const password = document.getElementById('registerPassword').value.trim();
         const result = await this.validateCredentials(username, password);
-        if(result !== 'validation successful') {
+        if(result != 'validation successful') {
             alert(result);
+            return;
         }
 
-        // make register request
+        const uuid = await fetch('http://localhost:5000/register', {
+            method: 'POST',
+            headers: {
+                'Content-type':'Application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        })
+        .then(result => result.json())
+        .then(data => data.result);
+
+        sessionStorage.setItem('User_Key',uuid);
+
+        this.props.changePage('main');
     }
 
     async validateCredentials(username, password) {
@@ -33,7 +49,7 @@ class Register extends React.Component {
             return 'Password is too short. Must be at least 6 symbols.';
         }
 
-        await fetch('http://localhost:5000/checkUsername',{
+        let isUsernameTaken = await fetch('http://localhost:5000/checkUsername',{
             method: 'POST',
             headers: {
                 'Content-type':'Application/json'
@@ -43,11 +59,11 @@ class Register extends React.Component {
             })
         })
         .then(response => response.json())
-        .then(data => {
-            if(!data.usernameUnique) {
-                return 'This username is already taken';
-            }
-        });
+        .then(data => !data.usernameUnique);
+
+        if(isUsernameTaken) {
+            return 'This username is already taken!';
+        }
 
         return 'validation successful';
     }

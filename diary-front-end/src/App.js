@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
+import Main from './Components/Main/Main';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,6 +13,13 @@ class App extends React.Component {
 
     this.getActivePage = this.getActivePage.bind(this);
     this.changeActivePage = this.changeActivePage.bind(this);
+  }
+
+  componentDidMount() {
+    const uuid = sessionStorage.getItem('User_Key');
+    if(uuid) {
+      this.changeActivePage('main');
+    }
   }
 
   changeActivePage(newActivePage) {
@@ -25,6 +33,7 @@ class App extends React.Component {
     switch(this.state.activePage) {
       case 'login': return <Login changePage={this.changeActivePage}/>;
       case 'register': return <Register changePage={this.changeActivePage}/>
+      case 'main': return <Main changePage={this.changeActivePage}/>
       default: throw 'Invalid active page state';
     }
   }
