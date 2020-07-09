@@ -13,15 +13,21 @@ class Register extends React.Component {
         this.props.changePage('login');
     }
 
+    // validate input, register the user,
+    // retreive and save the User_Key
+    // and login the user
     async sendRegisterRequest() {
+        // format the input
         const username = document.getElementById('registerUsername').value.trim();
         const password = document.getElementById('registerPassword').value.trim();
         const result = await this.validateCredentials(username, password);
-        if(result != 'validation successful') {
+        // if an error message is returned
+        if(result !== 'validation successful') {
             alert(result);
             return;
         }
 
+        // get the User_Key from the registration
         const uuid = await fetch('http://localhost:5000/register', {
             method: 'POST',
             headers: {
@@ -40,6 +46,7 @@ class Register extends React.Component {
         this.props.changePage('main');
     }
 
+    // validate the input
     async validateCredentials(username, password) {
         if(username.length < 4) {
             return 'Username is too short. Must be at least 4 symbols';

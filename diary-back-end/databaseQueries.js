@@ -35,7 +35,23 @@ function registerUser(username, password) {
     });
 }
 
+function loginUser(username, password) {
+    return new Promise((resolve, reject) => {
+        pool.query('Select User_Key from Users Where Username = ? and `Password` = ?',
+        [username, password],(err,res) => {
+            if(err) reject(err);
+
+            if(res.length === 0) {
+                reject(false);
+            }
+            
+            resolve(true);
+        })
+    });
+}
+
 module.exports = {
     checkUsername,
-    registerUser
+    registerUser,
+    loginUser
 }

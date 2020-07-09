@@ -15,6 +15,8 @@ class App extends React.Component {
     this.changeActivePage = this.changeActivePage.bind(this);
   }
 
+  // try to get the User_Key
+  // and login the user
   componentDidMount() {
     const uuid = sessionStorage.getItem('User_Key');
     if(uuid) {
@@ -29,6 +31,7 @@ class App extends React.Component {
     this.forceUpdate();
   }
 
+  // return DOM element from the currentActivePage
   getActivePage() {
     switch(this.state.activePage) {
       case 'login': return <Login changePage={this.changeActivePage}/>;
