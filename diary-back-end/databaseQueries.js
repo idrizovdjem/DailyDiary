@@ -42,10 +42,12 @@ function loginUser(username, password) {
             if(err) reject(err);
 
             if(res.length === 0) {
-                reject(false);
+                resolve(false);
             }
-            
-            resolve(true);
+            else {
+                const uuid = res[0]['User_Key'];
+                resolve(uuid);
+            }
         })
     });
 }

@@ -13,7 +13,10 @@ class Login extends React.Component {
         this.props.changePage('register');
     }
 
+    // validate user input, make request to the server
+    // and get the uuid
     async sendLoginRequest() {
+        // validate input
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
         const result = await this.validateCredentials(username, password);
@@ -22,6 +25,7 @@ class Login extends React.Component {
             return;
         }
 
+        // make request to the server
         const uuid = await fetch('http://localhost:5000/login',{
             method: 'POST',
             headers: {
@@ -35,7 +39,16 @@ class Login extends React.Component {
         .then(response => response.json())
         .then(data => data.key);
 
-        alert(uuid);
+        // if the login is not successfull
+        // alert an error
+        if(uuid === false) {
+            alert('Wrong username or password!');
+            return;
+        }
+
+        // login the user
+        sessionStorage.setItem('User_Key', uuid);
+        this.props.changePage('main');
     }
 
     // validate the input

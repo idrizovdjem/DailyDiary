@@ -23,7 +23,6 @@ appRouter.post('/login', async(req,res) => {
     const {username, password} = req.body;
     const hashedPassword = sha512(password);
     const uuid = await loginUser(username, hashedPassword)
-        .catch(res.send({key:false}));
     res.send({key:uuid});
 });
 
