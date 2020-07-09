@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
+const { use } = require('./appRouter');
 
 const pool = mysql.createPool({
     "connectionLimit": 10,
@@ -52,8 +53,95 @@ function loginUser(username, password) {
     });
 }
 
+function getUserId(uuid) {
+    return new Promise((resolve, reject) => {
+        pool.query('select Id from Users where User_key = ?',[uuid],
+        (err,res) => {
+            if(err) reject(err);
+
+            if(res.length === 0) {
+                return resolve(false);
+            }
+
+            resolve(res[0]['Id']);
+        });
+    });
+}
+
+function getNotes(userId, date) {
+    return new Promise((resolve, reject) => {
+        pool.query(`select * from Notes where User_Id = ? and Created_On = ? and Is_Deleted = 0`,
+        [userId, date],(err,res) => {
+            if(err) reject(err);
+
+            if(res.length === 0) resolve({});
+
+            const notes = [];
+            for(var i = 0; i < res.length; i++) {
+                var note = {
+                    'Title':res[i]['Title'],
+                    'Content':res[i]['Content']
+                };
+                notes.push(note);
+            }
+
+            resolve(notes);
+        });
+    });
+}
+
+async function getInformation(uuid, date) {
+    const userId = await getUserId(uuid);
+    if(userId === false) {
+        return false;
+    }
+
+    return new Promise((resolve, reject) => {
+
+        pool.query(`select Mood_Id from UserMoods 
+            where User_Id = ? and \`Date\` = ?`,[userId, date],async (err, res) => {
+            if(err) reject(err);
+
+            if(res.length === 0) {
+                pool.query(`insert into UserMoods(User_Id, Mood_Id, \`Date\`)
+                values(?,?,?)`,[userId, 3, date], (err, res) => {
+                    if(err) reject(err);
+                });
+                res[0]['Mood_Id'] = 3;
+            }
+
+            const notes = await getNotes(userId, date);
+
+            const emotion = res[0]['Mood_Id'];
+            const returnObject = {
+                'emotion': emotion,
+                'notes': notes
+            };
+            resolve(returnObject);
+        });
+    });
+}
+
+async function updateMood(uuid, date, moodIndex) {
+    const userId = await getUserId(uuid);
+    if(userId === false) {
+        return false;
+    }
+
+    return new Promise((resolve, reject) => {
+        pool.query(`update UserMoods set Mood_Id = ?
+        where User_Id = ? and \`Date\` = ?`,[moodIndex, userId, date], (err,res) => {
+            if(err) reject(err);
+
+            resolve(true);
+        })
+    });
+}
+
 module.exports = {
     checkUsername,
     registerUser,
-    loginUser
+    loginUser,
+    getInformation,
+    updateMood
 }
