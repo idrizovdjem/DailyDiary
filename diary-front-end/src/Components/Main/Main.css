@@ -1,0 +1,43 @@
+.side_nav {
+    float: left;
+    width: 25%;
+    height: 100vh;
+    border-right: 1px solid black;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.side_nav input[type=date] {
+    margin: 10px;
+    width: 200px;
+}
+
+.drop_down {
+    font-size: 20px;
+    width: 200px;
+}
+
+.note {
+    font-size: 20px;
+    width: 90%;
+    border: 2px solid black;
+    margin: 10px auto;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    user-select: none;
+    background-color: white;
+}
+
+.note:hover {
+    background-color: lightcyan;
+    cursor: pointer;
+}
+
+.new_note_button {
+    font-size: 20px;
+    width: 90%;
+    height: 40px;
+    margin: 20px; 
+    border: 1px solid black;
+    border-radius: 3px;
+}
