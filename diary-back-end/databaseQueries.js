@@ -1,7 +1,6 @@
 const mysql = require('mysql');
 require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
-const { use } = require('./appRouter');
 
 const pool = mysql.createPool({
     "connectionLimit": 10,
@@ -97,26 +96,22 @@ async function getInformation(uuid, date) {
     }
 
     return new Promise((resolve, reject) => {
-
         pool.query(`select Mood_Id from UserMoods 
             where User_Id = ? and \`Date\` = ?`,[userId, date],async (err, res) => {
             if(err) reject(err);
+
+            const returnObject = {};
 
             if(res.length === 0) {
                 pool.query(`insert into UserMoods(User_Id, Mood_Id, \`Date\`)
                 values(?,?,?)`,[userId, 3, date], (err, res) => {
                     if(err) reject(err);
                 });
-                res[0]['Mood_Id'] = 3;
             }
 
-            const notes = await getNotes(userId, date);
-
-            const emotion = res[0]['Mood_Id'];
-            const returnObject = {
-                'emotion': emotion,
-                'notes': notes
-            };
+            returnObject.emotion = res.length === 0 ? 3 : res[0]['Mood_Id'];
+            returnObject.notes = await getNotes(userId, date);
+            
             resolve(returnObject);
         });
     });

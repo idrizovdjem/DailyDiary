@@ -37,7 +37,7 @@ class App extends React.Component {
       case 'login': return <Login changePage={this.changeActivePage}/>;
       case 'register': return <Register changePage={this.changeActivePage}/>
       case 'main': return <Main changePage={this.changeActivePage}/>
-      default: throw 'Invalid active page state';
+      default: throw new Error('Invalid active page state');
     }
   }
 

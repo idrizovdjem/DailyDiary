@@ -39,6 +39,7 @@ class Main extends React.Component {
             case 2: color = "#caf0f8";break;
             case 3: color = "#caffbf";break;
             case 4: color = "#83e377";break;
+            default: color = "#caf0f8";break;  
         }
 
         sideNav.style.backgroundColor = color;
