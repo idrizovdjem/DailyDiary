@@ -133,10 +133,27 @@ async function updateMood(uuid, date, moodIndex) {
     });
 }
 
+async function createNote(uuid, date, noteName) {
+    const userId = await getUserId(uuid);
+    if(userId === false) {
+        return false;
+    }
+
+    return new Promise((resolve, reject) => {
+        pool.query(`insert into Notes(Title,Created_On,User_Id) 
+        values(?,?,?)`,[noteName, date, userId],(err,res) => {
+            if(err) return err;
+
+            resolve(res);
+        });
+    });
+}
+
 module.exports = {
     checkUsername,
     registerUser,
     loginUser,
     getInformation,
-    updateMood
+    updateMood,
+    createNote
 }

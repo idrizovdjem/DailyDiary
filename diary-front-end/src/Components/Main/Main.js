@@ -5,12 +5,14 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            date: new Date().toISOString().substring(0,10)
+            date: new Date().toISOString().substring(0,10),
+            notes: {}
         };
         
         this.updateDate = this.updateDate.bind(this);
         this.changeEmotion = this.changeEmotion.bind(this);
         this.fetchCurrentInformation = this.fetchCurrentInformation.bind(this);
+        this.createNewNote = this.createNewNote.bind(this);
     }
 
     async fetchCurrentInformation() {
@@ -27,6 +29,11 @@ class Main extends React.Component {
 
         const select = document.getElementById('dropDown');
         select.selectedIndex = result.emotion - 1;
+
+        await this.setState({
+            notes: result.notes
+        });
+
         this.updateBackroundColor(result.emotion - 1);
     }
 
@@ -87,7 +94,36 @@ class Main extends React.Component {
         this.updateBackroundColor(selectedIndex);
     }
 
+    async createNewNote() {
+        var noteName = prompt('Name your note:');
+        if(noteName.length < 3) {
+            alert('Note name cannot be less than 3 symbols!');
+            return;
+        }
+
+        const uuid = sessionStorage.getItem('User_Key');
+        await fetch('http://localhost:5000/createNote',{
+            method:'POST',
+            headers: {
+                'Content-type':'Application/json'
+            },
+            body: JSON.stringify({
+                noteName,
+                uuid,
+                'date': this.state.date
+            })
+        });
+
+        this.fetchCurrentInformation();
+    }
+
     render() {
+        const notes = [];
+        for(var i = 0; i < Object.keys(this.state.notes).length; i++) {
+            const title = this.state.notes[i].Title;
+            notes.push(<p key={i} className="note">{title}</p>);
+        }
+
         return(
             <div className="main_page">
                 <div className="side_nav" id="sideNav">
@@ -103,14 +139,9 @@ class Main extends React.Component {
                     </select>
                     <h2>Notes:</h2>
 
-                    <p className="note">This is note with very long title.
-                    This is getting ridiculous</p>
-                    <p className="note">This is note with very long title.
-                    This is getting ridiculous</p>
-                    <p className="note">This is note with very long title.
-                    This is getting ridiculous</p>
+                    {notes}
                     
-                    <button className="new_note_button">New Note</button>
+                    <button className="new_note_button" onClick={this.createNewNote}>New Note</button>
                 </div>
             </div>
         );

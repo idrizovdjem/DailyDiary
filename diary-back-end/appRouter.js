@@ -5,7 +5,8 @@ const {
     registerUser,
     loginUser,
     getInformation,
-    updateMood } = require('./databaseQueries');
+    updateMood,
+    createNote } = require('./databaseQueries');
 const { sha512 } = require('js-sha512');
 
 appRouter.post('/checkUsername', async (req,res) => {
@@ -43,6 +44,12 @@ appRouter.post('/updateMood', async(req,res) => {
     moodIndex++;
     const result = await updateMood(uuid, date, moodIndex);
     res.json({response: result});
+});
+
+appRouter.post('/createNote', async(req,res) => {
+    const {uuid,noteName,date} = req.body;
+    await createNote(uuid, date, noteName);
+    res.sendStatus(201);
 });
 
 module.exports = appRouter;
