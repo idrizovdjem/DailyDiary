@@ -10,9 +10,10 @@ class Main extends React.Component {
         
         this.updateDate = this.updateDate.bind(this);
         this.changeEmotion = this.changeEmotion.bind(this);
+        this.fetchCurrentInformation = this.fetchCurrentInformation.bind(this);
     }
 
-    async componentDidMount() {
+    async fetchCurrentInformation() {
         const uuid = sessionStorage.getItem('User_Key');
         const result = await fetch(`http://localhost:5000/getCurrentInfo?uuid=${uuid}&date=${this.state.date}`)
         .then(response => response.json())
@@ -27,6 +28,10 @@ class Main extends React.Component {
         const select = document.getElementById('dropDown');
         select.selectedIndex = result.emotion - 1;
         this.updateBackroundColor(result.emotion - 1);
+    }
+
+    async componentDidMount() {
+        await this.fetchCurrentInformation();
     }
 
     updateBackroundColor(emotionIndex) {
@@ -50,7 +55,8 @@ class Main extends React.Component {
         await this.setState({
             date: newDate
         });
-        alert(this.state.date);
+        
+        await this.fetchCurrentInformation();
     }
 
     async changeEmotion() {

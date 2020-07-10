@@ -28,6 +28,9 @@ appRouter.post('/login', async(req,res) => {
     res.send({key:uuid});
 });
 
+// TODO: refactor the router and divide it into
+// smaller routers
+
 appRouter.get('/getCurrentInfo', async(req,res) => {
     const uuid = req.query.uuid;
     const date = req.query.date;
