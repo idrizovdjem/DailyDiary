@@ -18,6 +18,7 @@ class Main extends React.Component {
         this.fetchCurrentInformation = this.fetchCurrentInformation.bind(this);
         this.createNewNote = this.createNewNote.bind(this);
         this.selectNote = this.selectNote.bind(this);
+        this.deleteNote = this.deleteNote.bind(this);
     }
 
     // get the uuid and make request to the server
@@ -50,6 +51,10 @@ class Main extends React.Component {
         const textBox = document.getElementById('textBox');
         textBox.value = '';
         textBox.disabled = true;
+
+        const noteTitleBox = document.getElementById('noteName');
+        noteTitleBox.value = '';
+        noteTitleBox.disabled = true;
 
         this.updateBackroundColor(result.emotion - 1);
     }
@@ -118,9 +123,9 @@ class Main extends React.Component {
     }
 
     // get the new note name, validate it and make request to the server
-    async createNewNote() {
+    async createNewNote() { 
         var noteName = prompt('Name your note:');
-        if(noteName.length < 3) {
+        if(noteName === null || noteName.length < 3) {
             alert('Note name cannot be less than 3 symbols!');
             return;
         }
@@ -156,6 +161,33 @@ class Main extends React.Component {
             note.content = '';
         }
         textBox.innerText = note.content;
+
+        const noteTitleBox = document.getElementById('noteName');
+        noteTitleBox.disabled = false;
+        noteTitleBox.value = note.title;
+    }
+
+    async deleteNote() {
+        if(Object.keys(this.state.activeNote).length === 0) {
+            alert('First select note!');
+            return;
+        }
+
+        var confirm = window.confirm('Are you sure you want to delete this note?');
+        if(!confirm) {
+            return;
+        }
+
+        const noteId = this.state.activeNote.id;
+        await fetch('http://localhost:5000/deleteNote',{
+            method:'POST',
+            headers: {
+                'Content-type':'Application/json'
+            },
+            body: JSON.stringify({noteId})
+        });
+
+        await this.fetchCurrentInformation();
     }
 
     render() {
@@ -189,7 +221,7 @@ class Main extends React.Component {
                         <input type="text" name="noteName" id="noteName"
                         className="noteTitle"/>
                         <img src={saveIcon} className="icon"/>
-                        <img src={binIcon} className="icon" />
+                        <img src={binIcon} className="icon" onClick={this.deleteNote}/>
                         <img src={logoutIcon} className="logout" />
                     </div>
                     <textarea className="text_box" id="textBox"></textarea>

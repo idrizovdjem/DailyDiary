@@ -80,7 +80,7 @@ function getNotes(userId, date) {
                 var note = {
                     'id':res[i]['Id'],
                     'title':res[i]['Title'],
-                    'Content':res[i]['Content']
+                    'content':res[i]['Content']
                 };
                 notes.push(note);
             }
@@ -150,11 +150,25 @@ async function createNote(uuid, date, noteName) {
     });
 }
 
+function deleteNote(noteId) {
+    return new Promise((resolve, reject) => {
+        pool.query(`update Notes set Is_Deleted = 1 where Id = ?`,[noteId],(err,res) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(true);
+        });
+    });
+}
+
 module.exports = {
     checkUsername,
     registerUser,
     loginUser,
     getInformation,
     updateMood,
-    createNote
+    createNote,
+    deleteNote
 }

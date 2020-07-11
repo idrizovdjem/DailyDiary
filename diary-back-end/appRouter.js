@@ -6,7 +6,8 @@ const {
     loginUser,
     getInformation,
     updateMood,
-    createNote } = require('./databaseQueries');
+    createNote,
+    deleteNote } = require('./databaseQueries');
 const { sha512 } = require('js-sha512');
 
 appRouter.post('/checkUsername', async (req,res) => {
@@ -50,6 +51,12 @@ appRouter.post('/createNote', async(req,res) => {
     const {uuid,noteName,date} = req.body;
     await createNote(uuid, date, noteName);
     res.sendStatus(201);
+});
+
+appRouter.post('/deleteNote',async(req,res) => {
+    const noteId = req.body.noteId;
+    await deleteNote(noteId);
+    res.sendStatus(200);
 });
 
 module.exports = appRouter;
