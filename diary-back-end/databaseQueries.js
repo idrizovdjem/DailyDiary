@@ -78,7 +78,8 @@ function getNotes(userId, date) {
             const notes = [];
             for(var i = 0; i < res.length; i++) {
                 var note = {
-                    'Title':res[i]['Title'],
+                    'id':res[i]['Id'],
+                    'title':res[i]['Title'],
                     'Content':res[i]['Content']
                 };
                 notes.push(note);
