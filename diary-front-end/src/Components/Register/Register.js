@@ -28,7 +28,7 @@ class Register extends React.Component {
         }
 
         // get the User_Key from the registration
-        const uuid = await fetch('http://localhost:5000/register', {
+        const uuid = await fetch('http://localhost:5000/authentication/register', {
             method: 'POST',
             headers: {
                 'Content-type':'Application/json'
@@ -56,7 +56,7 @@ class Register extends React.Component {
             return 'Password is too short. Must be at least 6 symbols.';
         }
 
-        let isUsernameTaken = await fetch('http://localhost:5000/checkUsername',{
+        let isUsernameTaken = await fetch('http://localhost:5000/authentication/checkUsername',{
             method: 'POST',
             headers: {
                 'Content-type':'Application/json'

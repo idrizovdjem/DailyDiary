@@ -19,6 +19,8 @@ class Main extends React.Component {
         this.createNewNote = this.createNewNote.bind(this);
         this.selectNote = this.selectNote.bind(this);
         this.deleteNote = this.deleteNote.bind(this);
+        this.saveNote = this.saveNote.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     // get the uuid and make request to the server
@@ -160,7 +162,7 @@ class Main extends React.Component {
         if(note.content === undefined) {
             note.content = '';
         }
-        textBox.innerText = note.content;
+        textBox.value = note.content;
 
         const noteTitleBox = document.getElementById('noteName');
         noteTitleBox.disabled = false;
@@ -188,6 +190,53 @@ class Main extends React.Component {
         });
 
         await this.fetchCurrentInformation();
+    }
+
+    async saveNote() {
+        if(Object.keys(this.state.activeNote).length === 0) {
+            alert('First select note!');
+            return;
+        }
+
+        const noteId = this.state.activeNote.id;
+        
+        const newTitle = document.getElementById('noteName').value.trim();
+        const noteContent = document.getElementById('textBox').value;
+
+        await fetch('http://localhost:5000/saveNote',{
+            method: 'POST',
+            headers: {
+                'Content-type':"application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                noteId,
+                'title': newTitle,
+                'content': noteContent
+            })
+        });
+
+        var note = this.state.activeNote;
+        note.title = newTitle;
+        note.content = noteContent;
+
+        await this.fetchCurrentInformation();
+
+        await this.setState({
+            activeNote: note
+        });
+
+        const noteName = document.getElementById('noteName');
+        noteName.value = this.state.activeNote.title;
+        noteName.disabled = false;
+
+        const textBox = document.getElementById('textBox');
+        textBox.value = this.state.activeNote.content;
+        textBox.disabled = false;
+    }
+
+    logout() {
+        sessionStorage.clear();
+        this.props.changePage('login');
     }
 
     render() {
@@ -220,9 +269,9 @@ class Main extends React.Component {
                     <div className="top_nav">
                         <input type="text" name="noteName" id="noteName"
                         className="noteTitle"/>
-                        <img src={saveIcon} className="icon"/>
+                        <img src={saveIcon} className="icon" onClick={this.saveNote}/>
                         <img src={binIcon} className="icon" onClick={this.deleteNote}/>
-                        <img src={logoutIcon} className="logout" />
+                        <img src={logoutIcon} className="logout" onClick={this.logout}/>
                     </div>
                     <textarea className="text_box" id="textBox"></textarea>
                 </div>

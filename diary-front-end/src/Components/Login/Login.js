@@ -26,7 +26,7 @@ class Login extends React.Component {
         }
 
         // make request to the server
-        const uuid = await fetch('http://localhost:5000/login',{
+        const uuid = await fetch('http://localhost:5000/authentication/login',{
             method: 'POST',
             headers: {
                 'Content-type':'Application/json'

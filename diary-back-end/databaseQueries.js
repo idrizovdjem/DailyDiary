@@ -163,6 +163,19 @@ function deleteNote(noteId) {
     });
 }
 
+function saveNote(noteId, title, content) {
+    return new Promise((resolve, reject) => {
+        pool.query('update Notes set Title = ?,Content = ? where Id = ?',
+        [title,content,noteId],(err,res) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(true);
+        });
+    });
+}
+
 module.exports = {
     checkUsername,
     registerUser,
@@ -170,5 +183,6 @@ module.exports = {
     getInformation,
     updateMood,
     createNote,
-    deleteNote
+    deleteNote,
+    saveNote
 }

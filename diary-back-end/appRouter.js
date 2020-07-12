@@ -1,34 +1,11 @@
 const express = require('express');
 const appRouter = express.Router();
 const { 
-    checkUsername,
-    registerUser,
-    loginUser,
     getInformation,
     updateMood,
     createNote,
-    deleteNote } = require('./databaseQueries');
-const { sha512 } = require('js-sha512');
-
-appRouter.post('/checkUsername', async (req,res) => {
-    const username = req.body.username;
-    const result = await checkUsername(username);
-    res.json(result);
-});
-
-appRouter.post('/register', async(req,res) => {
-    const {username, password} = req.body;
-    hashedPassword = sha512(password);
-    const result = await registerUser(username, hashedPassword);
-    res.json({result});
-});
-
-appRouter.post('/login', async(req,res) => {
-    const {username, password} = req.body;
-    const hashedPassword = sha512(password);
-    const uuid = await loginUser(username, hashedPassword)
-    res.send({key:uuid});
-});
+    deleteNote,
+    saveNote } = require('./databaseQueries');
 
 // TODO: refactor the router and divide it into
 // smaller routers
@@ -58,5 +35,11 @@ appRouter.post('/deleteNote',async(req,res) => {
     await deleteNote(noteId);
     res.sendStatus(200);
 });
+
+appRouter.post('/saveNote', async(req,res) => {
+    const {noteId, title, content} = req.body;
+    await saveNote(noteId, title, content);
+    res.sendStatus(200);
+}); 
 
 module.exports = appRouter;
