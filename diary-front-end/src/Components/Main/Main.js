@@ -133,7 +133,7 @@ class Main extends React.Component {
         }
 
         const uuid = sessionStorage.getItem('User_Key');
-        await fetch('http://localhost:5000/createNote',{
+        await fetch('http://localhost:5000/note/createNote',{
             method:'POST',
             headers: {
                 'Content-type':'Application/json'
@@ -181,7 +181,7 @@ class Main extends React.Component {
         }
 
         const noteId = this.state.activeNote.id;
-        await fetch('http://localhost:5000/deleteNote',{
+        await fetch('http://localhost:5000/note/deleteNote',{
             method:'POST',
             headers: {
                 'Content-type':'Application/json'
@@ -203,7 +203,7 @@ class Main extends React.Component {
         const newTitle = document.getElementById('noteName').value.trim();
         const noteContent = document.getElementById('textBox').value;
 
-        await fetch('http://localhost:5000/saveNote',{
+        await fetch('http://localhost:5000/note/saveNote',{
             method: 'POST',
             headers: {
                 'Content-type':"application/json; charset=utf-8"
