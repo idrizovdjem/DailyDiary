@@ -27,7 +27,7 @@ class Main extends React.Component {
     // retrieving emotion and notes for the selected date.
     async fetchCurrentInformation() {
         const uuid = sessionStorage.getItem('User_Key');
-        const result = await fetch(`http://localhost:5000/getCurrentInfo?uuid=${uuid}&date=${this.state.date}`)
+        const result = await fetch(`http://localhost:5000/information/getCurrentInfo?uuid=${uuid}&date=${this.state.date}`)
         .then(response => response.json())
         .then(data => data);
 
@@ -102,7 +102,7 @@ class Main extends React.Component {
 
         const uuid = sessionStorage.getItem('User_Key');
 
-        const result = await fetch(`http://localhost:5000/updateMood`,{
+        const result = await fetch(`http://localhost:5000/information/updateMood`,{
             method: 'POST',
             headers: {
                 'Content-type':'Application/json'

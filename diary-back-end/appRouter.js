@@ -1,8 +1,6 @@
 const express = require('express');
 const appRouter = express.Router();
-const { 
-    getInformation,
-    updateMood,
+const {
     createNote,
     deleteNote,
     saveNote } = require('./databaseQueries');
@@ -10,19 +8,7 @@ const {
 // TODO: refactor the router and divide it into
 // smaller routers
 
-appRouter.get('/getCurrentInfo', async(req,res) => {
-    const uuid = req.query.uuid;
-    const date = req.query.date;
-    const result = await getInformation(uuid, date);
-    res.json(result);
-});
 
-appRouter.post('/updateMood', async(req,res) => {
-    let {uuid,date,moodIndex} = req.body;
-    moodIndex++;
-    const result = await updateMood(uuid, date, moodIndex);
-    res.json({response: result});
-});
 
 appRouter.post('/createNote', async(req,res) => {
     const {uuid,noteName,date} = req.body;
